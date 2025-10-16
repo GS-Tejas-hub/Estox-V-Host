@@ -393,7 +393,7 @@ export default function HowItWorks() {
                 </Button>
               </Link>
               <Link to={createPageUrl("Contact")}>
-                <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                <Button variant="ghost" size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
                   Talk to Expert
                 </Button>
               </Link>

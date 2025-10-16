@@ -115,7 +115,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link to={createPageUrl("HowItWorks")}>
-                <Button size="lg" className="bg-white/90 text-black hover:bg-white px-8 py-4 text-lg font-semibold backdrop-blur-sm">
+                <Button variant="ghost" size="lg" className="bg-white/90 text-black hover:bg-white px-8 py-4 text-lg font-semibold backdrop-blur-sm">
                   <Play className="mr-2 w-5 h-5 text-black" />
                   How It Works
                 </Button>
@@ -420,7 +420,7 @@ export default function Home() {
               </Button>
             </Link>
             <Link to={createPageUrl("Contact")}>
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+              <Button variant="ghost" size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
                 Talk to an Expert
               </Button>
             </Link>
