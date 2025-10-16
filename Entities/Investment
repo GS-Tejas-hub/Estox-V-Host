@@ -1,0 +1,38 @@
+{
+  "name": "Investment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project invested in"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the investor"
+    },
+    "amount_invested": {
+      "type": "number",
+      "description": "Amount invested in INR"
+    },
+    "estocks_purchased": {
+      "type": "number",
+      "description": "Number of Estocks purchased"
+    },
+    "investment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date of investment"
+    },
+    "project_title": {
+      "type": "string",
+      "description": "Title of the project for portfolio display"
+    }
+  },
+  "required": [
+    "project_id",
+    "user_email",
+    "amount_invested",
+    "estocks_purchased",
+    "project_title"
+  ]
+}

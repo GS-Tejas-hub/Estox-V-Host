@@ -1,0 +1,79 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "location": {
+      "type": "string",
+      "description": "Property location"
+    },
+    "property_type": {
+      "type": "string",
+      "enum": [
+        "Land",
+        "PG",
+        "Rental",
+        "Commercial"
+      ],
+      "description": "Type of property"
+    },
+    "min_investment": {
+      "type": "number",
+      "description": "Minimum investment amount in INR"
+    },
+    "expected_roi": {
+      "type": "number",
+      "description": "Expected ROI percentage"
+    },
+    "rental_yield": {
+      "type": "number",
+      "description": "Annual rental yield percentage"
+    },
+    "appreciation_potential": {
+      "type": "number",
+      "description": "Expected appreciation percentage"
+    },
+    "total_value": {
+      "type": "number",
+      "description": "Total property value in INR"
+    },
+    "funded_percentage": {
+      "type": "number",
+      "description": "Percentage of project funded"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Property image URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Open",
+        "Funded",
+        "Coming Soon"
+      ],
+      "default": "Open",
+      "description": "Investment status"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed project description"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key project highlights"
+    }
+  },
+  "required": [
+    "title",
+    "location",
+    "property_type",
+    "min_investment"
+  ]
+}

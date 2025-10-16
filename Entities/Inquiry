@@ -1,0 +1,60 @@
+{
+  "name": "Inquiry",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "investment_range": {
+      "type": "string",
+      "enum": [
+        "1.5L - 5L",
+        "5L - 10L",
+        "10L - 25L",
+        "25L+"
+      ],
+      "description": "Investment budget range"
+    },
+    "interest_area": {
+      "type": "string",
+      "enum": [
+        "Land",
+        "PG",
+        "Rental",
+        "Commercial",
+        "All"
+      ],
+      "description": "Area of investment interest"
+    },
+    "message": {
+      "type": "string",
+      "description": "Additional message or queries"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "Website",
+        "WhatsApp",
+        "Referral",
+        "Social Media"
+      ],
+      "default": "Website",
+      "description": "How they found us"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "phone"
+  ]
+}
