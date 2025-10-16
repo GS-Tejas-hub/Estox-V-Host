@@ -84,6 +84,14 @@ export default function Contact() {
       available: "Instant Support"
     },
     {
+      icon: MessageCircle,
+      title: "Instagram",
+      description: "Follow us for updates and insights",
+      value: "@estox_one",
+      action: "https://www.instagram.com/estox_one?igsh=ZThjb3dkd2o2aDFs&utm_source=ig_contact_invite",
+      available: "Social"
+    },
+    {
       icon: Calendar,
       title: "Schedule Meeting",
       description: "Book a personal consultation",
@@ -170,7 +178,7 @@ export default function Contact() {
           }}
         ></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text:white">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -198,3 +206,252 @@ export default function Contact() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Multiple Ways to Reach Us
             </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx:auto">
+              Choose the communication method that works best for you
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {contactMethods.map((method, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-center h-full">
+                  <CardContent className="p-8">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <method.icon className="w-8 h-8 text-blue-900" />
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{method.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4">{method.description}</p>
+
+                    <div className="mb-4">
+                      <a
+                        href={method.action}
+                        target={method.action.startsWith('http') ? '_blank' : '_self'}
+                        rel={method.action.startsWith('http') ? 'noopener noreferrer' : ''}
+                        className="text-blue-900 font-semibold hover:text-blue-700 transition-colors"
+                      >
+                        {method.value}
+                      </a>
+                    </div>
+
+                    <Badge variant="outline" className="text-xs">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {method.available}
+                    </Badge>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form & Office Info */}
+      <section className="pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div>
+              <Card className="border-0 shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-gray-900">
+                    Start Your Investment Journey
+                  </CardTitle>
+                  <p className="text-gray-600">
+                    Fill out the form below and our investment expert will contact you within 24 hours
+                  </p>
+                </CardHeader>
+
+                <CardContent>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          placeholder="Enter your full name"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="email">Email Address *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          placeholder="Enter your email"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          placeholder="+91 98765 43210"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="investment_range">Investment Budget</Label>
+                        <Select value={formData.investment_range} onValueChange={(value) => handleInputChange('investment_range', value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your budget range" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1.5L - 5L">₹1.5L - ₹5L</SelectItem>
+                            <SelectItem value="5L - 10L">₹5L - ₹10L</SelectItem>
+                            <SelectItem value="10L - 25L">₹10L - ₹25L</SelectItem>
+                            <SelectItem value="25L+">₹25L+</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="interest_area">Area of Interest</Label>
+                      <Select value={formData.interest_area} onValueChange={(value) => handleInputChange('interest_area', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select property type of interest" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Land">Land Investment</SelectItem>
+                          <SelectItem value="PG">Student PG</SelectItem>
+                          <SelectItem value="Rental">Rental Properties</SelectItem>
+                          <SelectItem value="Commercial">Commercial Spaces</SelectItem>
+                          <SelectItem value="All">All Property Types</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="message">Message</Label>
+                      <Textarea
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        placeholder="Tell us about your investment goals or any specific questions..."
+                        className="h-32"
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full bg-blue-900 hover:bg-blue-800 py-4 text-lg font-semibold"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Submitting...
+                        </>
+                      ) : (
+                        'Submit Inquiry'
+                      )}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Office Info & Why Choose Us */}
+            <div className="space-y-8">
+              {/* Office Information */}
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-xl">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    Office Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-gray-600">{officeInfo.address}</p>
+
+                    <div className="border-t pt-4">
+                      <div className="flex items-center text-sm text-gray-600 mb-2">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {officeInfo.hours}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {officeInfo.closed}
+                      </div>
+                    </div>
+
+                    <Button variant="outline" className="w-full">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      View on Google Maps
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Why Choose Us */}
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl">Why Choose Estox One?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center">
+                      <Shield className="w-5 h-5 text-blue-600 mr-3" />
+                      <span className="text-sm text-gray-700">RERA Compliant & Legally Protected</span>
+                    </div>
+                    <div className="flex items-center">
+                      <TrendingUp className="w-5 h-5 text-green-600 mr-3" />
+                      <span className="text-sm text-gray-700">18% Average Returns</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Users className="w-5 h-5 text-purple-600 mr-3" />
+                      <span className="text-sm text-gray-700">500+ Happy Investors</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Quick FAQs */}
+          <div className="mt-16">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center">Frequently Asked Questions</CardTitle>
+                <p className="text-gray-600 text-center">Quick answers to common investor questions</p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-8">
+                  {faqs.map((faq, index) => (
+                    <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0">
+                      <h4 className="font-semibold text-gray-900 mb-3">{faq.question}</h4>
+                      <p className="text-gray-600 text-sm">{faq.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      <style jsx>{`
+        .text-gold-400 { color: #fbbf24; }
+        .bg-gold-600 { background-color: #d97706; }
+      `}</style>
+    </div>
+  );
+}

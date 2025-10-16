@@ -198,4 +198,218 @@ export default function HowItWorks() {
 
           <div className="space-y-16">
             {steps.map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}
+              >
+                <div className="flex-1">
+                  <Card className="border-0 shadow-xl h-full">
+                    <CardContent className="p-8">
+                      <div className="flex items-center mb-6">
+                        <div className="w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center mr-4">
+                          <step.icon className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                          <div className="text-gold-600 font-bold text-lg">Step {step.step}</div>
+                          <h3 className="text-2xl font-bold text-gray-900">{step.title}</h3>
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-600 mb-6 text-lg">{step.description}</p>
+                      
+                      <ul className="space-y-3">
+                        {step.details.map((detail, idx) => (
+                          <li key={idx} className="flex items-center">
+                            <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span className="text-gray-700">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="flex-1">
+                  <div className="relative">
+                    <img 
+                      src={`https://images.unsplash.com/photo-${
+                        index === 0 ? '1560472355-536de3962603' :
+                        index === 1 ? '1563013544-824ae1b704d3' : 
+                        index === 2 ? '1450101499163-c8848c66ca85' :
+                        '1611974789855-9c2a0a7236a3'
+                      }?w=800&h=600&fit=crop`}
+                      alt={step.title}
+                      className="rounded-xl shadow-2xl w-full h-80 object-cover"
+                    />
+                    <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-gold-600 rounded-full flex items-center justify-center text-gray-900 text-2xl font-bold shadow-lg">
+                      {step.step}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Investment Benefits */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Fractional Real Estate?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Unlock the benefits of real estate investment without traditional barriers
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full group">
+                  <CardContent className="p-8 text-center">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-900 transition-colors">
+                      <benefit.icon className="w-8 h-8 text-blue-900 group-hover:text-white transition-colors" />
+                    </div>
+                    
+                    <Badge className="mb-4 bg-gold-600 text-gray-900 font-semibold">
+                      {benefit.highlight}
+                    </Badge>
+                    
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">{benefit.title}</h3>
+                    <p className="text-gray-600">{benefit.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Property Types */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Investment Property Types
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Diversify across different property categories based on your risk appetite and investment goals
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {propertyTypes.map((property, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="border-0 shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
+                  <div className="relative">
+                    <img 
+                      src={property.image}
+                      alt={property.type}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-white/90 text-gray-900 font-semibold">
+                        {property.type}
+                      </Badge>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-green-500 text-white font-semibold">
+                        {property.expectedReturns}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-8">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{property.type}</h3>
+                    <p className="text-gray-600 mb-6">{property.description}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="text-gray-500">Min Investment</div>
+                        <div className="font-semibold text-blue-900">{property.minInvestment}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Expected Returns</div>
+                        <div className="font-semibold text-green-600">{property.expectedReturns}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Time Horizon</div>
+                        <div className="font-semibold">{property.timeHorizon}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Risk Level</div>
+                        <div className={`${
+                          property.riskLevel.includes('Low') ? 'text-green-600' :
+                          property.riskLevel.includes('Medium') ? 'text-yellow-600' :
+                          'text-red-600'
+                        } font-semibold`}>
+                          {property.riskLevel}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Ready to Start Your Investment Journey?
+            </h2>
+            <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
+              Join 500+ investors who have already started building their real estate portfolio with Estox One
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to={createPageUrl("Projects")}>
+                <Button size="lg" className="bg-gold-600 hover:bg-gold-700 text-gray-900 px-8 py-4 text-lg font-semibold">
+                  View Live Projects
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to={createPageUrl("Contact")}>
+                <Button size="lg" className="bg-white text-black hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                  Talk to Expert
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <style jsx>{`
+        .text-gold-400 { color: #fbbf24; }
+        .text-gold-600 { color: #d97706; }
+        .bg-gold-600 { background-color: #d97706; }
+        .bg-gold-700 { background-color: #b45309; }
+        .hover\\:bg-gold-700:hover { background-color: #b45309; }
+      `}</style>
+    </div>
+  );
+}
  

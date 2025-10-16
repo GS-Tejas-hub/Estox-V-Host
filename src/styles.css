@@ -1,0 +1,6 @@
+/* Using Tailwind via CDN; keep optional global resets/utilities here if needed */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; }
+
+

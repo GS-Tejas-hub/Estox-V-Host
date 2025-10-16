@@ -198,3 +198,224 @@ export default function Legal() {
               Understanding the Special Purpose Vehicle model that ensures your ownership rights
             </p>
           </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Card className="border-0 shadow-xl">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">SPV Benefits for Investors</h3>
+                  
+                  <div className="space-y-6">
+                    <div className="flex items-start">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">True Ownership</h4>
+                        <p className="text-gray-600">You own actual shares in the property-owning company, not just financial instruments.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <Shield className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Asset Protection</h4>
+                        <p className="text-gray-600">Property is ring-fenced in SPV, protecting it from external liabilities.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <Scale className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Legal Rights</h4>
+                        <p className="text-gray-600">Clear legal recourse and voting rights in proportion to your investment.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                        <Users className="w-5 h-5 text-gold-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Transparent Governance</h4>
+                        <p className="text-gray-600">Regular SPV board meetings and financial reporting to all investors.</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-center"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=600&fit=crop"
+                alt="Legal Documentation"
+                className="rounded-xl shadow-2xl mb-8"
+              />
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">Professional Management</h4>
+                <p className="text-gray-600">
+                  Each SPV is professionally managed with dedicated fund management, 
+                  legal compliance, and investor relations teams.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Legal Documents */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Legal Documents & Templates
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Download sample legal documents to understand our transparent investment process
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {legalDocuments.map((doc, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                          <FileText className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{doc.title}</h3>
+                          <div className="flex items-center text-sm text-gray-500 mt-1">
+                            <Badge variant="outline" className="text-xs mr-2">{doc.type}</Badge>
+                            <span>{doc.size}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-4">{doc.description}</p>
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleDownload(doc.downloadUrl, doc.title)}
+                      className="w-full bg-blue-900 hover:bg-blue-800"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Legal Partners */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Our Partner
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Working with India's leading audit and compliance firms
+            </p>
+          </div>
+
+          <div className="flex justify-center">
+            {partners.map((partner, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="max-w-sm"
+              >
+                <Card className="border-0 shadow-2xl text-center">
+                  <CardContent className="p-8">
+                    <img 
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="w-24 h-24 object-cover rounded-full bg-gray-100 p-2 mx-auto mb-4"
+                    />
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{partner.name}</h3>
+                    <Badge className="mb-4 bg-blue-100 text-blue-800 mx-auto">{partner.type}</Badge>
+                    <p className="text-gray-600 text-sm">{partner.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Risk Disclosures */}
+      <section className="py-20 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Guaranteed Security & Returns
+            </h2>
+            <p className="text-xl text-gray-300">
+              Our commitment to a risk-free and profitable investment experience
+            </p>
+          </div>
+
+          {/* Switch to light gray container with dark text as requested */}
+          <Card className="border-0 bg-gray-100">
+            <CardContent className="p-8 text-gray-900">
+              <div className="space-y-4">
+                {riskDisclosures.map((risk, index) => (
+                  <div key={index} className="flex items-start">
+                    <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <p className="text-gray-700">{risk}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-green-800 text-sm">
+                  <strong>Our Guarantee:</strong> At Estox One, we eliminate investment risks through robust legal frameworks and expert vetting. Your financial growth and security are our top priority, ensuring a profitable and worry-free journey into real estate.
+                </p>
+                <div className="mt-4 text-green-700 text-xs">
+                  <p>For questions or concerns, contact us at:</p>
+                  <p><strong>Email:</strong> estoxone.infra@gmail.com</p>
+                  <p><strong>Phone:</strong> +91 81055 20382</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <style jsx>{`
+        .text-gold-400 { color: #fbbf24; }
+        .text-gold-600 { color: #d97706; }
+        .bg-gold-600 { background-color: #d97706; }
+        .bg-gold-100 { background-color: #fef3c7; }
+      `}</style>
+    </div>
+  );
+}

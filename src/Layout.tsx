@@ -1,12 +1,16 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Phone, Mail, MessageCircle, Menu, X } from "lucide-react";
+import { Phone, Mail, MessageCircle, Menu, X, Linkedin, Instagram, Youtube, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Layout({ children, currentPageName }) {
+type LayoutProps = {
+  children: React.ReactNode;
+  currentPageName?: string;
+};
+
+export default function Layout({ children }: LayoutProps): JSX.Element {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -20,9 +24,8 @@ export default function Layout({ children, currentPageName }) {
     { name: "Contact", href: createPageUrl("Contact") }
   ];
 
-  // Scroll to top when navigating
   const handleNavClick = () => {
-    setIsMobileMenuOpen(false); // Close mobile menu on navigation
+    setIsMobileMenuOpen(false);
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
@@ -118,16 +121,16 @@ export default function Layout({ children, currentPageName }) {
 
             <div className="mt-auto pt-8 border-t">
               <Link to={createPageUrl("Projects")} onClick={handleNavClick}>
-                  <Button size="lg" className="w-full bg-blue-900 hover:bg-blue-800 text-white mb-4">
-                    Start Investing
-                  </Button>
+                <Button size="lg" className="w-full bg-blue-900 hover:bg-blue-800 text-white mb-4">
+                  Start Investing
+                </Button>
               </Link>
               <a href="https://wa.me/+918105520382" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="lg" className="w-full border-blue-900 text-blue-900 hover:bg-blue-50">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    WhatsApp
-                  </Button>
-                </a>
+                <Button variant="outline" size="lg" className="w-full border-blue-900 text-blue-900 hover:bg-blue-50">
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  WhatsApp
+                </Button>
+              </a>
             </div>
           </motion.div>
         )}
@@ -151,14 +154,17 @@ export default function Layout({ children, currentPageName }) {
                 Estox One Infra Private Limited facilitates real estate projects on a private placement basis. Each project is limited to a maximum of 200 investors in compliance with the Companies Act, 2013. Estox One Infra Private Limited is not a SEBI-registered investment advisor, broker, or stock exchange. Investments in real estate involve risks, and past performance does not guarantee future results.
               </p>
               <div className="flex space-x-4">
-                <a href="https://www.linkedin.com/company/estox-one/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors">
-                  LinkedIn
+                <a href="https://www.linkedin.com/company/estox-one/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="LinkedIn">
+                  <Linkedin className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors">
-                  YouTube
+                <a href="https://www.instagram.com/estox_one?igsh=ZThjb3dkd2o2aDFs&utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="Instagram">
+                  <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors">
-                  Twitter
+                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="YouTube">
+                  <Youtube className="w-5 h-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="Twitter">
+                  <Twitter className="w-5 h-5" />
                 </a>
               </div>
             </div>
@@ -232,7 +238,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
 
-      <style jsx>{`
+      <style>{`
         .text-gold-400 { color: #fbbf24; }
         .text-gold-500 { color: #f59e0b; }
         .text-gold-600 { color: #d97706; }
@@ -247,3 +253,5 @@ export default function Layout({ children, currentPageName }) {
     </div>
   );
 }
+
+
