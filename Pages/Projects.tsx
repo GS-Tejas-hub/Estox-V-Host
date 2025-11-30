@@ -32,11 +32,27 @@ export default function Projects() {
   const [showFullTerms, setShowFullTerms] = useState(false);
   const [showFullPrivacy, setShowFullPrivacy] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     loadProjects();
     loadInvestments();
+    checkAdminStatus();
   }, []);
+
+  const checkAdminStatus = async () => {
+    try {
+      const user = await User.me();
+      console.log('[Projects] Loaded user:', user);
+      console.log('[Projects] User role:', user?.role);
+      if (user?.role === 'admin') {
+        setIsAdmin(true);
+        console.log('[Projects] Admin access granted!');
+      }
+      setCurrentUser(user);
+    } catch (error) {
+      console.error('[Projects] Error checking admin:', error);
+    }
+  };
 
   const loadProjects = async () => {
     const data = await Project.list();
@@ -84,7 +100,7 @@ export default function Projects() {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(project => 
+      filtered = filtered.filter(project =>
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.location.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -148,10 +164,10 @@ export default function Projects() {
     };
 
     await Investment.create(investment);
-    
+
     // Reload investments to update counts
     await loadInvestments();
-    
+
     setShowInvestDialog(false);
     setShowSuccessDialog(true);
     setEstocksCount(1);
@@ -252,7 +268,7 @@ export default function Projects() {
             const maxInvestors = project.id === "demo-project" ? 20 : 200;
             const investorCount = getProjectInvestorCount(project.id);
             const fundedPercentage = getProjectFundedPercentage(project.id, maxInvestors);
-            
+
             return (
               <motion.div
                 key={project.id}
@@ -266,10 +282,10 @@ export default function Projects() {
                       <Badge className="bg-white text-gold-600 font-bold">DEMO PROJECT</Badge>
                     </div>
                   )}
-                  
+
                   <div className="relative">
-                    <img 
-                      src={project.image_url || "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=500&fit=crop"} 
+                    <img
+                      src={project.image_url || "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=500&fit=crop"}
                       alt={project.title}
                       className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -292,7 +308,7 @@ export default function Projects() {
                           <span>{fundedPercentage}%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-gold-600 h-2 rounded-full transition-all duration-500"
                             style={{ width: `${fundedPercentage}%` }}
                           ></div>
@@ -300,7 +316,7 @@ export default function Projects() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <CardHeader className="pb-3">
                     <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900 transition-colors">
                       {project.title}
@@ -310,21 +326,21 @@ export default function Projects() {
                       {project.location}
                     </div>
                   </CardHeader>
-                  
+
                   <CardContent className="flex-1">
                     <div className="space-y-3 mb-6">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Expected ROI</span>
                         <span className="font-bold text-green-600">{project.expected_roi}%</span>
                       </div>
-                      
+
                       {project.rental_yield > 0 && (
                         <div className="flex justify-between items-center">
                           <span className="text-gray-600">Rental Yield</span>
                           <span className="font-semibold text-blue-600">{project.rental_yield}%</span>
                         </div>
                       )}
-                      
+
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Min Investment</span>
                         <span className="font-bold text-gray-900">{formatInvestmentValue(project.min_investment)}</span>
@@ -351,16 +367,16 @@ export default function Projects() {
                         </ul>
                       </div>
                     )}
-                    
+
                     <div className="space-y-3">
-                      <Button 
+                      <Button
                         className="w-full bg-blue-900 hover:bg-blue-800"
                         onClick={() => handleInvestClick(project)}
                         disabled={project.status === "Funded" || investorCount >= maxInvestors}
                       >
                         {project.status === "Funded" || investorCount >= maxInvestors ? "Fully Funded" : "Invest Now"}
                       </Button>
-                      
+
                       <div className="flex gap-2">
                         <Button variant="outline" className="flex-1" size="sm">
                           View Details
@@ -387,13 +403,13 @@ export default function Projects() {
                 Please read and accept our terms to continue with your investment.
               </DialogDescription>
             </DialogHeader>
-            
+
             <div className="space-y-6">
               {/* Terms & Conditions */}
               <div className="border rounded-lg p-4">
                 <div className="flex items-center space-x-2 mb-3">
-                  <Checkbox 
-                    id="terms" 
+                  <Checkbox
+                    id="terms"
                     checked={termsAccepted}
                     onCheckedChange={setTermsAccepted}
                   />
@@ -401,12 +417,12 @@ export default function Projects() {
                     I accept the Terms & Conditions
                   </label>
                 </div>
-                
+
                 <div className={`text-sm text-gray-600 ${showFullTerms ? '' : 'max-h-32 overflow-hidden'}`}>
                   <h4 className="font-semibold mb-2">Terms and Conditions</h4>
                   <p className="mb-2">Last Updated: January 2025</p>
                   <p className="mb-4">Welcome to Estox One Infra Private Limited ("Estox One", "we", "our", "us"). By accessing or using our website (estox.in), mobile application, or our services (collectively, the "Platform"), you agree to comply with and be bound by the following Terms and Conditions ("Terms"). Please read them carefully.</p>
-                  
+
                   {showFullTerms && (
                     <>
                       <h5 className="font-semibold mb-2">1. Eligibility</h5>
@@ -414,14 +430,14 @@ export default function Projects() {
                         <li>You must be at least 18 years old and legally capable of entering into binding contracts.</li>
                         <li>By using our Platform, you confirm that all information you provide is true, accurate, and complete.</li>
                       </ul>
-                      
+
                       <h5 className="font-semibold mb-2">2. Nature of Services</h5>
                       <ul className="list-disc pl-5 mb-4 space-y-1">
                         <li>Estox One Infra Private Limited is a real estate investment platform that enables users to participate in fractional ownership of real estate projects through Special Purpose Vehicles (SPVs).</li>
                         <li>We are not a stock exchange, securities trading platform, or financial advisor. Investments are subject to property market risks.</li>
                         <li>Estox One does not guarantee fixed returns, profits, or appreciation.</li>
                       </ul>
-                      
+
                       <h5 className="font-semibold mb-2">3. Investor Limitations</h5>
                       <ul className="list-disc pl-5 mb-4 space-y-1">
                         <li>In compliance with the Companies Act, 2013, each project offered by Estox One Infra Private Limited shall be limited to a maximum of 200 investors.</li>
@@ -431,9 +447,9 @@ export default function Projects() {
                     </>
                   )}
                 </div>
-                
-                <Button 
-                  variant="link" 
+
+                <Button
+                  variant="link"
                   className="p-0 h-auto text-blue-600"
                   onClick={() => setShowFullTerms(!showFullTerms)}
                 >
@@ -444,8 +460,8 @@ export default function Projects() {
               {/* Privacy Policy */}
               <div className="border rounded-lg p-4">
                 <div className="flex items-center space-x-2 mb-3">
-                  <Checkbox 
-                    id="privacy" 
+                  <Checkbox
+                    id="privacy"
                     checked={privacyAccepted}
                     onCheckedChange={setPrivacyAccepted}
                   />
@@ -453,35 +469,35 @@ export default function Projects() {
                     I accept the Privacy Policy
                   </label>
                 </div>
-                
+
                 <div className={`text-sm text-gray-600 ${showFullPrivacy ? '' : 'max-h-32 overflow-hidden'}`}>
                   <h4 className="font-semibold mb-2">Privacy Policy</h4>
                   <p className="mb-4">Estox One Infra Private Limited ("Estox One", "we", "our", "us") respects your privacy and is committed to protecting your personal data.</p>
-                  
+
                   {showFullPrivacy && (
                     <>
                       <h5 className="font-semibold mb-2">1. Information We Collect</h5>
                       <p className="mb-4">We may collect your name, email, phone number, and usage data when you interact with our Platform.</p>
-                      
+
                       <h5 className="font-semibold mb-2">2. How We Use Your Information</h5>
                       <p className="mb-4">Your data is used to provide our services, communicate with you, comply with legal obligations, and improve our Platform.</p>
-                      
+
                       <h5 className="font-semibold mb-2">3. Sharing of Information</h5>
                       <p className="mb-4">We do not sell or share your personal information with third parties, except as required by law or for providing our services.</p>
                     </>
                   )}
                 </div>
-                
-                <Button 
-                  variant="link" 
+
+                <Button
+                  variant="link"
                   className="p-0 h-auto text-blue-600"
                   onClick={() => setShowFullPrivacy(!showFullPrivacy)}
                 >
                   {showFullPrivacy ? "Show Less" : "Read More"}
                 </Button>
               </div>
-              
-              <Button 
+
+              <Button
                 className="w-full bg-blue-900 hover:bg-blue-800"
                 onClick={handleTermsAccepted}
                 disabled={!termsAccepted || !privacyAccepted}
@@ -501,7 +517,7 @@ export default function Projects() {
                 {selectedProject?.id === "demo-project" ? "Demo investment - no real money involved" : "Choose your investment amount"}
               </DialogDescription>
             </DialogHeader>
-            
+
             {selectedProject && (
               <div className="space-y-6">
                 <div className="text-center p-6 bg-gray-50 rounded-lg">
@@ -510,14 +526,14 @@ export default function Projects() {
                   </h3>
                   <p className="text-gray-600">Minimum investment per sqft</p>
                 </div>
-                
+
                 <div className="space-y-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Number of sqft
                   </label>
                   <div className="flex items-center space-x-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="icon"
                       onClick={() => setEstocksCount(Math.max(1, estocksCount - 1))}
                     >
@@ -526,8 +542,8 @@ export default function Projects() {
                     <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">
                       {estocksCount}
                     </span>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="icon"
                       onClick={() => setEstocksCount(estocksCount + 1)}
                     >
@@ -535,7 +551,7 @@ export default function Projects() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total Investment:</span>
@@ -544,8 +560,8 @@ export default function Projects() {
                     </span>
                   </div>
                 </div>
-                
-                <Button 
+
+                <Button
                   className="w-full bg-blue-900 hover:bg-blue-800"
                   onClick={handleConfirmPayment}
                 >
@@ -575,8 +591,8 @@ export default function Projects() {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full"
                 onClick={() => setShowSuccessDialog(false)}
               >
