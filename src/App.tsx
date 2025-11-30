@@ -8,12 +8,20 @@ import About from '../Pages/About';
 import Contact from '../Pages/Contact';
 import HowItWorks from '../Pages/HowItWorks';
 import Legal from '../Pages/Legal';
+import Login from '../Pages/Login';
+import SignUp from '../Pages/SignUp';
 import { createPageUrl } from './utils';
 
 export default function App(): JSX.Element {
   return (
-    <Layout currentPageName="App">
-      <Routes>
+    <Routes>
+      {/* Auth Routes - No Layout */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+
+      {/* Public Routes - With Layout */}
+      <Route path="/" element={<Layout currentPageName="App" />}>
+        <Route index element={<Navigate to={createPageUrl('Home')} replace />} />
         <Route path={createPageUrl('Home')} element={<Home />} />
         <Route path={createPageUrl('Projects')} element={<Projects />} />
         <Route path={createPageUrl('Portfolio')} element={<Portfolio />} />
@@ -21,10 +29,11 @@ export default function App(): JSX.Element {
         <Route path={createPageUrl('Contact')} element={<Contact />} />
         <Route path={createPageUrl('HowItWorks')} element={<HowItWorks />} />
         <Route path={createPageUrl('Legal')} element={<Legal />} />
-        <Route path="/" element={<Navigate to={createPageUrl('Home')} replace />} />
-        <Route path="*" element={<Navigate to={createPageUrl('Home')} replace />} />
-      </Routes>
-    </Layout>
+      </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to={createPageUrl('Home')} replace />} />
+    </Routes>
   );
 }
 

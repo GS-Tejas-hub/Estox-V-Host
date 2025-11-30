@@ -30,3 +30,4 @@ npm run preview
 - Tailwind is via CDN; no postcss build needed.
 - SPA routing is supported with `vercel.json` rewrite to `index.html`.
 
+

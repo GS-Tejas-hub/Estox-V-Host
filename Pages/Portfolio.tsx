@@ -20,14 +20,20 @@ export default function Portfolio() {
   const loadUserInvestments = async () => {
     try {
       const user = await User.me();
+      console.log('[Portfolio] Current user:', user);
       setCurrentUser(user);
-      
+
       const allInvestments = await Investment.list();
+      console.log('[Portfolio] All investments from DB:', allInvestments);
+
       const userInvestments = allInvestments.filter(inv => inv.user_email === user.email);
+      console.log('[Portfolio] Filtered user investments:', userInvestments);
+
       setInvestments(userInvestments);
     } catch (error) {
+      console.error('[Portfolio] Error loading investments:', error);
       // User not logged in, redirect to login
-      await User.loginWithRedirect(window.location.href);
+      window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
     }
     setIsLoading(false);
   };
@@ -125,7 +131,7 @@ export default function Portfolio() {
         {investments.length > 0 ? (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Investments</h2>
-            
+
             {investments.map((investment, index) => (
               <motion.div
                 key={investment.id}
@@ -143,7 +149,7 @@ export default function Portfolio() {
                             <Badge className="ml-2 bg-gold-600 text-white">DEMO</Badge>
                           )}
                         </h3>
-                        
+
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                           <div>
                             <p className="text-gray-500">Estocks Owned</p>
@@ -165,7 +171,7 @@ export default function Portfolio() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex space-x-3">
                         <Button variant="outline" size="sm">
                           View Details

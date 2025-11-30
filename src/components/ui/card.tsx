@@ -12,8 +12,14 @@ export function CardTitle({ className = '', ...props }: React.HTMLAttributes<HTM
   return <h3 className={`text-lg font-semibold ${className}`} {...props} />;
 }
 
+export function CardDescription({ className = '', ...props }: React.HTMLAttributes<HTMLParagraphElement>): JSX.Element {
+  return <p className={`text-sm text-gray-600 ${className}`} {...props} />;
+}
+
 export function CardContent({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
   return <div className={`p-6 ${className}`} {...props} />;
 }
+
+
 
 

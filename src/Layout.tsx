@@ -1,18 +1,29 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, Outlet } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Phone, Mail, MessageCircle, Menu, X, Linkedin, Instagram, Youtube, Twitter } from "lucide-react";
+import { Phone, Mail, MessageCircle, Menu, X, Linkedin, Instagram, Youtube, Twitter, LogIn, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { User } from "@/entities/User";
 
 type LayoutProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   currentPageName?: string;
 };
 
 export default function Layout({ children }: LayoutProps): JSX.Element {
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const currentUser = await User.me();
+    setUser(currentUser);
+  };
 
   const navigation = [
     { name: "Home", href: createPageUrl("Home") },
@@ -49,11 +60,10 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
                   key={item.name}
                   to={item.href}
                   onClick={handleNavClick}
-                  className={`text-sm font-medium transition-colors hover:text-blue-900 ${
-                    location.pathname === item.href 
-                      ? 'text-blue-900 border-b-2 border-gold-500' 
-                      : 'text-gray-700'
-                  }`}
+                  className={`text-sm font-medium transition-colors hover:text-blue-900 ${location.pathname === item.href
+                    ? 'text-blue-900 border-b-2 border-gold-500'
+                    : 'text-gray-700'
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -68,11 +78,39 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
                   WhatsApp
                 </Button>
               </a>
-              <Link to={createPageUrl("Projects")} onClick={handleNavClick}>
-                <Button size="sm" className="bg-blue-900 hover:bg-blue-800 text-white">
-                  Start Investing
-                </Button>
-              </Link>
+              {user ? (
+                <>
+                  <span className="text-sm text-gray-700">
+                    Hi, {user.full_name || user.email}!</span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-red-500 text-red-600 hover:bg-red-50"
+                    onClick={async () => {
+                      await User.signOut();
+                      setUser(null);
+                    }}
+                  >
+                    <LogIn className="w-4 h-4 mr-2 rotate-180" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={handleNavClick}>
+                    <Button variant="outline" size="sm" className="border-blue-900 text-blue-900 hover:bg-blue-50">
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup" onClick={handleNavClick}>
+                    <Button size="sm" className="bg-blue-900 hover:bg-blue-800 text-white">
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -119,12 +157,29 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
               ))}
             </nav>
 
-            <div className="mt-auto pt-8 border-t">
-              <Link to={createPageUrl("Projects")} onClick={handleNavClick}>
-                <Button size="lg" className="w-full bg-blue-900 hover:bg-blue-800 text-white mb-4">
-                  Start Investing
-                </Button>
-              </Link>
+            <div className="mt-auto pt-8 border-t space-y-3">
+              {user ? (
+                <Link to="/dashboard" onClick={handleNavClick}>
+                  <Button size="lg" className="w-full bg-blue-900 hover:bg-blue-800 text-white">
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login" onClick={handleNavClick}>
+                    <Button variant="outline" size="lg" className="w-full border-blue-900 text-blue-900 hover:bg-blue-50">
+                      <LogIn className="w-5 h-5 mr-2" />
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup" onClick={handleNavClick}>
+                    <Button size="lg" className="w-full bg-blue-900 hover:bg-blue-800 text-white">
+                      <UserPlus className="w-5 h-5 mr-2" />
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
               <a href="https://wa.me/+918105520382" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="lg" className="w-full border-blue-900 text-blue-900 hover:bg-blue-50">
                   <MessageCircle className="w-5 h-5 mr-2" />
@@ -138,7 +193,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
 
       {/* Main content */}
       <main className="pt-20">
-        {children}
+        {children || <Outlet />}
       </main>
 
       {/* Footer */}
@@ -175,7 +230,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
               <ul className="space-y-2">
                 {navigation.map((item) => (
                   <li key={item.name}>
-                    <Link 
+                    <Link
                       to={item.href}
                       onClick={handleNavClick}
                       className="text-gray-400 hover:text-gold-400 transition-colors"
@@ -205,8 +260,8 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
               <div className="mt-6">
                 <h4 className="font-medium mb-2">Stay Updated</h4>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     placeholder="Your email"
                     className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
