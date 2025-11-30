@@ -386,6 +386,26 @@ export default function Projects() {
                           Location
                         </Button>
                       </div>
+                      {isAdmin && project.id !== "demo-project" && (
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50"
+                            size="sm"
+                            onClick={() => alert('Edit: ' + project.title)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-red-500 text-red-600 hover:bg-red-50"
+                            size="sm"
+                            onClick={() => alert('Delete: ' + project.title)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
