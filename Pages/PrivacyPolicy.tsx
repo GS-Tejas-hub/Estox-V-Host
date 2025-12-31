@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
                             <div className="prose prose-lg max-w-none">
                                 {/* Header Info */}
                                 <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                                    <p className="text-sm text-gray-600 mb-2"><strong>Effective Date:</strong> [Insert Date]</p>
+                                    <p className="text-sm text-gray-600 mb-2"><strong>Effective Date:</strong> 17/12/2025</p>
                                     <p className="text-sm text-gray-600 mb-2"><strong>Company:</strong> ESTOX ONE INDIA PRIVATE LIMITED</p>
                                     <p className="text-sm text-gray-600 mb-2"><strong>CIN:</strong> U68100KA2025PTC212678</p>
                                     <p className="text-sm text-gray-600 mb-2"><strong>Registered Office:</strong> No. 39, K No. 138/4, Airport Road, Segehalli, KR Puram, Bhattarahalli, Bangalore North, Bangalore – 560049, Karnataka, India</p>

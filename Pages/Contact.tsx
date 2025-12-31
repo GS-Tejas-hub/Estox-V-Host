@@ -18,9 +18,13 @@ import {
   Users,
   TrendingUp,
   Shield,
-  Calendar
+  Calendar,
+  AlertCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
+
+// Web3Forms Access Key
+const WEB3FORMS_ACCESS_KEY = "ccfe7903-8d5d-4e67-af6f-d9f494ebb0d0";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -33,26 +37,71 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+    // Clear error when user starts typing
+    if (submitError) setSubmitError(null);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
-      await Inquiry.create({
-        ...formData,
-        source: "Website"
+      // Send to Web3Forms for email notification
+      const web3FormsData = {
+        access_key: WEB3FORMS_ACCESS_KEY,
+        subject: `New Investment Inquiry from ${formData.name} - Estox One`,
+        from_name: "Estox One Contact Form",
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        investment_budget: formData.investment_range || "Not specified",
+        interest_area: formData.interest_area || "Not specified",
+        message: formData.message || "No message provided",
+        source: "Website Contact Form"
+      };
+
+      const web3Response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(web3FormsData)
       });
+
+      const web3Result = await web3Response.json();
+
+      if (!web3Result.success) {
+        throw new Error(web3Result.message || "Failed to send email");
+      }
+
+      // Also save to Supabase for your records (optional - won't fail if this errors)
+      try {
+        await Inquiry.create({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          investment_range: formData.investment_range as "1.5L - 5L" | "5L - 10L" | "10L - 25L" | "25L+" | undefined,
+          interest_area: formData.interest_area as "Land" | "PG" | "Rental" | "Commercial" | "All" | undefined,
+          message: formData.message,
+          source: "Website"
+        });
+      } catch (dbError) {
+        console.log("Note: Supabase save skipped (not critical):", dbError);
+      }
+
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting inquiry:", error);
+      setSubmitError("Failed to send your inquiry. Please try again or contact us directly.");
     }
 
     setIsSubmitting(false);
@@ -102,7 +151,7 @@ export default function Contact() {
   ];
 
   const officeInfo = {
-    address: "627, 10th Main Rd, ITI Employees Layout, Annapurneshwari Nagar, Bengaluru, Karnataka 560056",
+    address: "No. 39, K No. 138/4, Airport Road, Segehalli, KR Puram, Bhattarahalli, Bangalore North, Bangalore – 560049, Karnataka, India",
     hours: "Monday - Saturday: 9:00 AM - 7:00 PM",
     closed: "Sunday: Closed"
   };
@@ -184,12 +233,12 @@ export default function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <Badge className="mb-6 bg-gold-600 text-gray-900 font-semibold px-4 py-2">
+            <Badge className="mb-6 text-gray-900 font-semibold px-4 py-2" style={{ backgroundColor: '#d97706' }}>
               Expert Investment Guidance
             </Badge>
 
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Get in <span className="text-gold-400">Touch</span> With Us
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
+              Get in <span style={{ color: '#fbbf24' }}>Touch</span> With Us
             </h1>
 
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
@@ -350,6 +399,14 @@ export default function Contact() {
                       />
                     </div>
 
+                    {/* Error Message */}
+                    {submitError && (
+                      <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <p className="text-sm">{submitError}</p>
+                      </div>
+                    )}
+
                     <Button
                       type="submit"
                       className="w-full bg-blue-900 hover:bg-blue-800 py-4 text-lg font-semibold"
@@ -358,7 +415,7 @@ export default function Contact() {
                       {isSubmitting ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          Submitting...
+                          Sending...
                         </>
                       ) : (
                         'Submit Inquiry'
@@ -447,11 +504,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        .text-gold-400 { color: #fbbf24; }
-        .bg-gold-600 { background-color: #d97706; }
-      `}</style>
     </div>
   );
 }
