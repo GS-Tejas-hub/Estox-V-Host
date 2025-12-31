@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Project } from "@/entities/Project";
 import { Investment } from "@/entities/Investment";
@@ -10,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { MapPin, TrendingUp, Home, Building, Briefcase, Users, Filter, Search, Plus, Minus, CheckCircle, ArrowRight } from "lucide-react";
+import { MapPin, TrendingUp, Home, Building, Briefcase, Users, Filter, Search, Plus, Minus, CheckCircle, ArrowRight, Edit2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -26,40 +25,48 @@ export default function Projects() {
   const [showTermsDialog, setShowTermsDialog] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [estocksCount, setEstocksCount] = useState(1); // Renamed conceptually to sqftCount in the UI, but variable name kept consistent for simplicity
+  const [estocksCount, setEstocksCount] = useState(1);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [showFullTerms, setShowFullTerms] = useState(false);
   const [showFullPrivacy, setShowFullPrivacy] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+
+  // Admin state
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+  const [projectForm, setProjectForm] = useState({
+    id: '',
+    title: '',
+    location: '',
+    property_type: 'Commercial',
+    min_investment: '',
+    expected_roi: '',
+    rental_yield: '',
+    total_value: '',
+    image_url: '',
+    status: 'Open',
+    description: '',
+    highlights: ''
+  });
+
   useEffect(() => {
     loadProjects();
     loadInvestments();
-    checkAdminStatus();
+    checkUserRole();
   }, []);
 
-  const checkAdminStatus = async () => {
-    try {
-      const user = await User.me();
-      console.log('[Projects] Loaded user:', user);
-      console.log('[Projects] User role:', user?.role);
-      if (user?.role === 'admin') {
-        setIsAdmin(true);
-        console.log('[Projects] Admin access granted!');
-      }
+  const checkUserRole = async () => {
+    const user = await User.me();
+    if (user) {
       setCurrentUser(user);
-    } catch (error) {
-      console.error('[Projects] Error checking admin:', error);
+      setIsAdmin(user.role === 'admin');
     }
   };
 
   const loadProjects = async () => {
     const data = await Project.list();
-    // Update the first project's min investment to 10K if it exists
-    if (data.length > 0) {
-      data[0].min_investment = 10000;
-    }
     setProjects(data);
   };
 
@@ -80,25 +87,22 @@ export default function Projects() {
   const filterAndSortProjects = useCallback(() => {
     let filtered = [...projects];
 
-    // Add demo project at the beginning
     const demoProject = {
       id: "demo-project",
       title: "Demo Project - Premium Mall",
       location: "Electronic City, Bangalore",
       property_type: "Commercial",
-      min_investment: 1000000, // 10L per sqft for demo
+      min_investment: 1000000,
       expected_roi: 20,
       rental_yield: 8,
-      total_value: 20000000, // 2 Cr
+      total_value: 20000000,
       image_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop",
       status: "Open",
       description: "Experience our investment process with this demo project",
       highlights: ["Demo purpose only", "Learn the investment process", "Risk-free simulation"]
     };
-
     filtered.unshift(demoProject);
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(project =>
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -106,24 +110,17 @@ export default function Projects() {
       );
     }
 
-    // Filter by property type
     if (selectedType && selectedType !== "all") {
       filtered = filtered.filter(project => project.property_type === selectedType);
     }
 
-    // Sort projects
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "roi_desc":
-          return (b.expected_roi || 0) - (a.expected_roi || 0);
-        case "roi_asc":
-          return (a.expected_roi || 0) - (b.expected_roi || 0);
-        case "investment_asc":
-          return (a.min_investment || 0) - (b.min_investment || 0);
-        case "investment_desc":
-          return (b.min_investment || 0) - (a.min_investment || 0);
-        default:
-          return 0;
+        case "roi_desc": return (b.expected_roi || 0) - (a.expected_roi || 0);
+        case "roi_asc": return (a.expected_roi || 0) - (b.expected_roi || 0);
+        case "investment_asc": return (a.min_investment || 0) - (b.min_investment || 0);
+        case "investment_desc": return (b.min_investment || 0) - (a.min_investment || 0);
+        default: return 0;
       }
     });
 
@@ -135,15 +132,14 @@ export default function Projects() {
   }, [filterAndSortProjects]);
 
   const handleInvestClick = async (project) => {
-    try {
-      const user = await User.me();
-      setCurrentUser(user);
-      setSelectedProject(project);
-      setShowTermsDialog(true);
-    } catch (error) {
-      // User not logged in, redirect to login
-      await User.loginWithRedirect(window.location.href);
+    const user = await User.me();
+    if (!user) {
+      window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+      return;
     }
+    setCurrentUser(user);
+    setSelectedProject(project);
+    setShowTermsDialog(true);
   };
 
   const handleTermsAccepted = () => {
@@ -154,18 +150,25 @@ export default function Projects() {
   };
 
   const handleConfirmPayment = async () => {
+    const user = await User.me();
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
+
     const investment = {
       project_id: selectedProject.id,
-      user_email: currentUser.email,
+      user_email: user.email,
       amount_invested: selectedProject.min_investment * estocksCount,
       estocks_purchased: estocksCount,
       project_title: selectedProject.title,
       investment_date: new Date().toISOString()
     };
 
-    await Investment.create(investment);
+    console.log('[Investment] Creating investment:', investment);
+    const result = await Investment.create(investment);
+    console.log('[Investment] Created result:', result);
 
-    // Reload investments to update counts
     await loadInvestments();
 
     setShowInvestDialog(false);
@@ -173,6 +176,89 @@ export default function Projects() {
     setEstocksCount(1);
     setTermsAccepted(false);
     setPrivacyAccepted(false);
+  };
+
+  // Admin Functions
+  const handleAddProject = () => {
+    setEditingProject(null);
+    setProjectForm({
+      id: `p-${Date.now()}`,
+      title: '',
+      location: '',
+      property_type: 'Commercial',
+      min_investment: '',
+      expected_roi: '',
+      rental_yield: '',
+      total_value: '',
+      image_url: '',
+      status: 'Open',
+      description: '',
+      highlights: ''
+    });
+    setShowProjectDialog(true);
+  };
+
+  const handleEditProject = (project) => {
+    setEditingProject(project);
+    setProjectForm({
+      id: project.id,
+      title: project.title,
+      location: project.location,
+      property_type: project.property_type,
+      min_investment: project.min_investment?.toString() || '',
+      expected_roi: project.expected_roi?.toString() || '',
+      rental_yield: project.rental_yield?.toString() || '',
+      total_value: project.total_value?.toString() || '',
+      image_url: project.image_url || '',
+      status: project.status || 'Open',
+      description: project.description || '',
+      highlights: Array.isArray(project.highlights) ? project.highlights.join('\n') : ''
+    });
+    setShowProjectDialog(true);
+  };
+
+  const handleDeleteProject = async (projectId) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+
+    const success = await Project.delete(projectId);
+    if (success) {
+      await loadProjects();
+      alert('Project deleted successfully!');
+    } else {
+      alert('Failed to delete project');
+    }
+  };
+
+  const handleSaveProject = async () => {
+    const projectData = {
+      id: projectForm.id,
+      title: projectForm.title,
+      location: projectForm.location,
+      property_type: projectForm.property_type,
+      min_investment: parseFloat(projectForm.min_investment),
+      expected_roi: parseFloat(projectForm.expected_roi) || 0,
+      rental_yield: parseFloat(projectForm.rental_yield) || 0,
+      total_value: parseFloat(projectForm.total_value) || 0,
+      image_url: projectForm.image_url,
+      status: projectForm.status,
+      description: projectForm.description,
+      highlights: projectForm.highlights ? projectForm.highlights.split('\n').filter(h => h.trim()) : []
+    };
+
+    let success;
+    if (editingProject) {
+      success = await Project.update(projectForm.id, projectData);
+    } else {
+      success = await Project.create(projectData);
+    }
+
+    if (success) {
+      await loadProjects();
+      setShowProjectDialog(false);
+      alert(editingProject ? 'Project updated successfully!' : 'Project created successfully!');
+    } else {
+      alert('Failed to save project');
+    }
   };
 
   const getPropertyIcon = (type) => {
@@ -198,7 +284,7 @@ export default function Projects() {
       return `₹${(value / 100000).toFixed(1)}L`;
     }
     return `₹${(value / 1000).toFixed(0)}K`;
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -211,6 +297,19 @@ export default function Projects() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover handpicked premium properties with verified returns. Start your fractional real estate journey today.
           </p>
+
+          {/* Admin Add Project Button */}
+          {isAdmin && (
+            <div className="mt-6">
+              <Button
+                onClick={handleAddProject}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Add New Project
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Filters */}
@@ -330,34 +429,27 @@ export default function Projects() {
                   <CardContent className="flex-1">
                     <div className="space-y-3 mb-6">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Expected ROI</span>
+                        <span className="text-sm text-gray-600">Expected ROI</span>
                         <span className="font-bold text-green-600">{project.expected_roi}%</span>
                       </div>
-
-                      {project.rental_yield > 0 && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Rental Yield</span>
-                          <span className="font-semibold text-blue-600">{project.rental_yield}%</span>
-                        </div>
-                      )}
-
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Min Investment</span>
+                        <span className="text-sm text-gray-600">Rental Yield</span>
+                        <span className="font-bold text-blue-600">{project.rental_yield}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Min Investment</span>
                         <span className="font-bold text-gray-900">{formatInvestmentValue(project.min_investment)}</span>
                       </div>
-
-                      {project.total_value && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Total Value</span>
-                          <span className="font-semibold">₹{(project.total_value / 10000000).toFixed(1)}Cr</span>
-                        </div>
-                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Total Value</span>
+                        <span className="font-bold text-gray-900">{formatInvestmentValue(project.total_value)}</span>
+                      </div>
                     </div>
 
                     {project.highlights && project.highlights.length > 0 && (
                       <div className="mb-6">
-                        <h4 className="font-semibold text-gray-900 mb-2">Key Highlights</h4>
-                        <ul className="text-sm text-gray-600 space-y-1">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Key Highlights</p>
+                        <ul className="text-xs text-gray-600 space-y-1">
                           {project.highlights.slice(0, 2).map((highlight, idx) => (
                             <li key={idx} className="flex items-center">
                               <div className="w-1.5 h-1.5 bg-gold-600 rounded-full mr-2"></div>
@@ -386,22 +478,26 @@ export default function Projects() {
                           Location
                         </Button>
                       </div>
+
+                      {/* Admin Controls */}
                       {isAdmin && project.id !== "demo-project" && (
                         <div className="flex gap-2 mt-2">
                           <Button
                             variant="outline"
                             className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50"
                             size="sm"
-                            onClick={() => alert('Edit: ' + project.title)}
+                            onClick={() => handleEditProject(project)}
                           >
+                            <Edit2 className="w-4 h-4 mr-1" />
                             Edit
                           </Button>
                           <Button
                             variant="outline"
                             className="flex-1 border-red-500 text-red-600 hover:bg-red-50"
                             size="sm"
-                            onClick={() => alert('Delete: ' + project.title)}
+                            onClick={() => handleDeleteProject(project.id)}
                           >
+                            <Trash2 className="w-4 h-4 mr-1" />
                             Delete
                           </Button>
                         </div>
@@ -414,209 +510,252 @@ export default function Projects() {
           })}
         </div>
 
-        {/* Terms & Conditions Dialog */}
+        {/* Terms Dialog */}
         <Dialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
           <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Terms & Conditions and Privacy Policy</DialogTitle>
+              <DialogTitle className="text-2xl font-bold">Terms & Conditions</DialogTitle>
+              <DialogTitle className="text-2xl font-bold">Complete Your Investment</DialogTitle>
               <DialogDescription>
-                Please read and accept our terms to continue with your investment.
+                {selectedProject?.title}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-6">
-              {/* Terms & Conditions */}
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Checkbox
-                    id="terms"
-                    checked={termsAccepted}
-                    onCheckedChange={setTermsAccepted}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  How many sqft do you want to invest in?
+                </label>
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setEstocksCount(Math.max(1, estocksCount - 1))}
+                    disabled={estocksCount <= 1}
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                  <Input
+                    type="number"
+                    value={estocksCount}
+                    onChange={(e) => setEstocksCount(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="text-center w-20"
                   />
-                  <label htmlFor="terms" className="text-sm font-medium">
-                    I accept the Terms & Conditions
-                  </label>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setEstocksCount(estocksCount + 1)}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
                 </div>
-
-                <div className={`text-sm text-gray-600 ${showFullTerms ? '' : 'max-h-32 overflow-hidden'}`}>
-                  <h4 className="font-semibold mb-2">Terms and Conditions</h4>
-                  <p className="mb-2">Last Updated: January 2025</p>
-                  <p className="mb-4">Welcome to Estox One Infra Private Limited ("Estox One", "we", "our", "us"). By accessing or using our website (estox.in), mobile application, or our services (collectively, the "Platform"), you agree to comply with and be bound by the following Terms and Conditions ("Terms"). Please read them carefully.</p>
-
-                  {showFullTerms && (
-                    <>
-                      <h5 className="font-semibold mb-2">1. Eligibility</h5>
-                      <ul className="list-disc pl-5 mb-4 space-y-1">
-                        <li>You must be at least 18 years old and legally capable of entering into binding contracts.</li>
-                        <li>By using our Platform, you confirm that all information you provide is true, accurate, and complete.</li>
-                      </ul>
-
-                      <h5 className="font-semibold mb-2">2. Nature of Services</h5>
-                      <ul className="list-disc pl-5 mb-4 space-y-1">
-                        <li>Estox One Infra Private Limited is a real estate investment platform that enables users to participate in fractional ownership of real estate projects through Special Purpose Vehicles (SPVs).</li>
-                        <li>We are not a stock exchange, securities trading platform, or financial advisor. Investments are subject to property market risks.</li>
-                        <li>Estox One does not guarantee fixed returns, profits, or appreciation.</li>
-                      </ul>
-
-                      <h5 className="font-semibold mb-2">3. Investor Limitations</h5>
-                      <ul className="list-disc pl-5 mb-4 space-y-1">
-                        <li>In compliance with the Companies Act, 2013, each project offered by Estox One Infra Private Limited shall be limited to a maximum of 200 investors.</li>
-                        <li>Investments are offered strictly on a private placement basis and are not a public offer of securities.</li>
-                        <li>Estox One reserves the right to refuse or limit participation in any project to ensure compliance with applicable laws.</li>
-                      </ul>
-                    </>
-                  )}
-                </div>
-
-                <Button
-                  variant="link"
-                  className="p-0 h-auto text-blue-600"
-                  onClick={() => setShowFullTerms(!showFullTerms)}
-                >
-                  {showFullTerms ? "Show Less" : "Read More"}
-                </Button>
               </div>
 
-              {/* Privacy Policy */}
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Checkbox
-                    id="privacy"
-                    checked={privacyAccepted}
-                    onCheckedChange={setPrivacyAccepted}
-                  />
-                  <label htmlFor="privacy" className="text-sm font-medium">
-                    I accept the Privacy Policy
-                  </label>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Price per sqft:</span>
+                  <span className="font-bold">{formatInvestmentValue(selectedProject?.min_investment || 0)}</span>
                 </div>
-
-                <div className={`text-sm text-gray-600 ${showFullPrivacy ? '' : 'max-h-32 overflow-hidden'}`}>
-                  <h4 className="font-semibold mb-2">Privacy Policy</h4>
-                  <p className="mb-4">Estox One Infra Private Limited ("Estox One", "we", "our", "us") respects your privacy and is committed to protecting your personal data.</p>
-
-                  {showFullPrivacy && (
-                    <>
-                      <h5 className="font-semibold mb-2">1. Information We Collect</h5>
-                      <p className="mb-4">We may collect your name, email, phone number, and usage data when you interact with our Platform.</p>
-
-                      <h5 className="font-semibold mb-2">2. How We Use Your Information</h5>
-                      <p className="mb-4">Your data is used to provide our services, communicate with you, comply with legal obligations, and improve our Platform.</p>
-
-                      <h5 className="font-semibold mb-2">3. Sharing of Information</h5>
-                      <p className="mb-4">We do not sell or share your personal information with third parties, except as required by law or for providing our services.</p>
-                    </>
-                  )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Quantity:</span>
+                  <span className="font-bold">{estocksCount} sqft</span>
                 </div>
-
-                <Button
-                  variant="link"
-                  className="p-0 h-auto text-blue-600"
-                  onClick={() => setShowFullPrivacy(!showFullPrivacy)}
-                >
-                  {showFullPrivacy ? "Show Less" : "Read More"}
-                </Button>
+                <div className="h-px bg-gray-300 my-2"></div>
+                <div className="flex justify-between text-lg">
+                  <span className="font-bold">Total Amount:</span>
+                  <span className="font-bold text-blue-900">
+                    {formatInvestmentValue((selectedProject?.min_investment || 0) * estocksCount)}
+                  </span>
+                </div>
               </div>
 
               <Button
-                className="w-full bg-blue-900 hover:bg-blue-800"
-                onClick={handleTermsAccepted}
-                disabled={!termsAccepted || !privacyAccepted}
+                className="w-full bg-blue-900 hover:bg-blue-800 h-12 text-lg"
+                onClick={handleConfirmPayment}
               >
-                Continue to Investment
+                Confirm Payment
               </Button>
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Investment Dialog */}
-        <Dialog open={showInvestDialog} onOpenChange={setShowInvestDialog}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Invest in {selectedProject?.title}</DialogTitle>
-              <DialogDescription>
-                {selectedProject?.id === "demo-project" ? "Demo investment - no real money involved" : "Choose your investment amount"}
-              </DialogDescription>
-            </DialogHeader>
-
-            {selectedProject && (
-              <div className="space-y-6">
-                <div className="text-center p-6 bg-gray-50 rounded-lg">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    ₹{selectedProject.min_investment.toLocaleString()} per sqft
-                  </h3>
-                  <p className="text-gray-600">Minimum investment per sqft</p>
-                </div>
-
-                <div className="space-y-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Number of sqft
-                  </label>
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setEstocksCount(Math.max(1, estocksCount - 1))}
-                    >
-                      <Minus className="w-4 h-4" />
-                    </Button>
-                    <span className="text-2xl font-bold text-gray-900 min-w-[3rem] text-center">
-                      {estocksCount}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setEstocksCount(estocksCount + 1)}
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4">
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span>Total Investment:</span>
-                    <span className="text-blue-900">
-                      ₹{(selectedProject.min_investment * estocksCount).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-
-                <Button
-                  className="w-full bg-blue-900 hover:bg-blue-800"
-                  onClick={handleConfirmPayment}
-                >
-                  {selectedProject.id === "demo-project" ? "Confirm Demo Payment" : "Confirm Payment"}
-                </Button>
-              </div>
-            )}
           </DialogContent>
         </Dialog>
 
         {/* Success Dialog */}
         <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
           <DialogContent className="max-w-md">
-            <DialogHeader className="items-center text-center">
+            <div className="text-center py-6">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+                <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
-              <DialogTitle className="text-2xl">Payment Successful!</DialogTitle>
+              <DialogTitle className="text-2xl font-bold mb-2">Payment Successful!</DialogTitle>
+              <DialogDescription className="text-gray-600 mb-6">
+                Your investment in {selectedProject?.title} has been recorded.
+              </DialogDescription>
+              <div className="space-y-3">
+                <Link to={createPageUrl('Portfolio')}>
+                  <Button className="w-full bg-blue-900 hover:bg-blue-800">
+                    View Portfolio <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowSuccessDialog(false)}
+                >
+                  Continue Browsing
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Admin Project Dialog */}
+        <Dialog open={showProjectDialog} onOpenChange={setShowProjectDialog}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">
+                {editingProject ? 'Edit Project' : 'Add New Project'}
+              </DialogTitle>
               <DialogDescription>
-                Your investment in '{selectedProject?.title}' has been recorded.
+                {editingProject ? 'Update project details' : 'Create a new investment opportunity'}
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <Link to={createPageUrl("Portfolio")}>
-                <Button className="w-full bg-blue-900 hover:bg-blue-800">
-                  View Portfolio
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
+
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-2">Project Title *</label>
+                <Input
+                  value={projectForm.title}
+                  onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
+                  placeholder="Premium Commercial Complex - Baner"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Location *</label>
+                <Input
+                  value={projectForm.location}
+                  onChange={(e) => setProjectForm({ ...projectForm, location: e.target.value })}
+                  placeholder="Baner, Pune"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Property Type *</label>
+                <Select value={projectForm.property_type} onValueChange={(value) => setProjectForm({ ...projectForm, property_type: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Commercial">Commercial</SelectItem>
+                    <SelectItem value="Land">Land</SelectItem>
+                    <SelectItem value="PG">PG</SelectItem>
+                    <SelectItem value="Rental">Rental</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Min Investment (₹) *</label>
+                <Input
+                  type="number"
+                  value={projectForm.min_investment}
+                  onChange={(e) => setProjectForm({ ...projectForm, min_investment: e.target.value })}
+                  placeholder="10000"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Expected ROI (%)</label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={projectForm.expected_roi}
+                  onChange={(e) => setProjectForm({ ...projectForm, expected_roi: e.target.value })}
+                  placeholder="18"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Rental Yield (%)</label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={projectForm.rental_yield}
+                  onChange={(e) => setProjectForm({ ...projectForm, rental_yield: e.target.value })}
+                  placeholder="7.5"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Total Value (₹)</label>
+                <Input
+                  type="number"
+                  value={projectForm.total_value}
+                  onChange={(e) => setProjectForm({ ...projectForm, total_value: e.target.value })}
+                  placeholder="50000000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Status</label>
+                <Select value={projectForm.status} onValueChange={(value) => setProjectForm({ ...projectForm, status: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Open">Open</SelectItem>
+                    <SelectItem value="Funded">Funded</SelectItem>
+                    <SelectItem value="Coming Soon">Coming Soon</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-2">Image URL</label>
+                <Input
+                  value={projectForm.image_url}
+                  onChange={(e) => setProjectForm({ ...projectForm, image_url: e.target.value })}
+                  placeholder="https://images.unsplash.com/photo-..."
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <Input
+                  value={projectForm.description}
+                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                  placeholder="Brief description of the project"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium mb-2">Highlights (one per line)</label>
+                <textarea
+                  className="w-full p-3 border rounded-lg"
+                  rows={3}
+                  value={projectForm.highlights}
+                  onChange={(e) => setProjectForm({ ...projectForm, highlights: e.target.value })}
+                  placeholder="Metro connectivity planned&#13;&#10;Rapid infrastructure development"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={handleSaveProject}
+                className="flex-1 bg-green-600 hover:bg-green-700"
+              >
+                {editingProject ? 'Update Project' : 'Create Project'}
+              </Button>
               <Button
                 variant="outline"
-                className="w-full"
-                onClick={() => setShowSuccessDialog(false)}
+                onClick={() => setShowProjectDialog(false)}
+                className="px-6"
               >
-                Continue Browsing
+                Cancel
               </Button>
             </div>
           </DialogContent>
