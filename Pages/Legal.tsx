@@ -25,7 +25,7 @@ export default function Legal() {
       description: "Special Purpose Vehicle ensures true ownership with clear legal title and asset protection for all investors.",
       details: [
         "Individual SPV for each property",
-        "Pro-rata ownership certificates", 
+        "Pro-rata ownership certificates",
         "Clear exit mechanisms defined",
         "Professional SPV management"
       ]
@@ -63,9 +63,9 @@ export default function Legal() {
       downloadUrl: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a5f3aacb05041249ddf1f0/4d7a52596_Investorsqftcertificate.pdf"
     },
     {
-      title: "SPV Structure Overview", 
+      title: "SPV Structure Overview",
       description: "Detailed explanation of Special Purpose Vehicle structure and investor protections",
-      size: "1.8 MB", 
+      size: "1.8 MB",
       type: "PDF",
       downloadUrl: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a5f3aacb05041249ddf1f0/9d9695877_Estox_SPV_Shareholding_and_Flow.pdf"
     },
@@ -81,7 +81,7 @@ export default function Legal() {
   const partners = [
     {
       name: "Devaraj B V & Co.",
-      type: "Our CA", 
+      type: "Our CA",
       description: "Independent audit and compliance verification services",
       logo: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&h=200&fit=crop&crop=center"
     }
@@ -96,7 +96,7 @@ export default function Legal() {
     "Our transparent platform provides you with all the necessary documentation to make informed, confident investment decisions."
   ];
 
-  const handleDownload = (url, fileName) => {
+  const handleDownload = (url: string, fileName: string) => {
     const link = document.createElement('a');
     link.href = url;
     link.download = fileName;
@@ -111,27 +111,27 @@ export default function Legal() {
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1920&h=1080&fit=crop')"
           }}
         ></div>
-        
+
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <Badge className="mb-6 bg-gold-600 text-gray-900 font-semibold px-4 py-2">
+            <Badge className="mb-6 text-gray-900 font-semibold px-4 py-2" style={{ backgroundColor: '#d97706' }}>
               RERA Compliant • Legally Protected • Audited
             </Badge>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Legal <span className="text-gold-400">Framework</span> & Compliance
+              Legal <span style={{ color: '#fbbf24' }}>Framework</span> & Compliance
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
               Your investments are protected by robust legal structures and regulatory compliance
             </p>
@@ -169,7 +169,7 @@ export default function Legal() {
                     </div>
                     <p className="text-gray-600">{feature.description}</p>
                   </CardHeader>
-                  
+
                   <CardContent>
                     <ul className="space-y-2">
                       {feature.details.map((detail, idx) => (
@@ -208,7 +208,7 @@ export default function Legal() {
               <Card className="border-0 shadow-xl">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold text-gray-900 mb-6">SPV Benefits for Investors</h3>
-                  
+
                   <div className="space-y-6">
                     <div className="flex items-start">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
@@ -241,8 +241,8 @@ export default function Legal() {
                     </div>
 
                     <div className="flex items-start">
-                      <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center mr-4 mt-1">
-                        <Users className="w-5 h-5 text-gold-600" />
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center mr-4 mt-1" style={{ backgroundColor: '#fef3c7' }}>
+                        <Users className="w-5 h-5" style={{ color: '#d97706' }} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-2">Transparent Governance</h4>
@@ -260,7 +260,7 @@ export default function Legal() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-center"
             >
-              <img 
+              <img
                 src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=600&fit=crop"
                 alt="Legal Documentation"
                 className="rounded-xl shadow-2xl mb-8"
@@ -268,7 +268,7 @@ export default function Legal() {
               <div className="bg-gray-50 rounded-xl p-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Professional Management</h4>
                 <p className="text-gray-600">
-                  Each SPV is professionally managed with dedicated fund management, 
+                  Each SPV is professionally managed with dedicated fund management,
                   legal compliance, and investor relations teams.
                 </p>
               </div>
@@ -299,6 +299,12 @@ export default function Legal() {
               >
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                   <CardContent className="p-6">
+                    {/* Demo Badge */}
+                    <div className="mb-3">
+                      <Badge className="bg-amber-100 text-amber-800 border border-amber-300 text-xs">
+                        📋 Demo Document
+                      </Badge>
+                    </div>
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
@@ -314,8 +320,8 @@ export default function Legal() {
                       </div>
                     </div>
                     <p className="text-gray-600 text-sm mb-4">{doc.description}</p>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       onClick={() => handleDownload(doc.downloadUrl, doc.title)}
                       className="w-full bg-blue-900 hover:bg-blue-800"
                     >
@@ -353,7 +359,7 @@ export default function Legal() {
               >
                 <Card className="border-0 shadow-2xl text-center">
                   <CardContent className="p-8">
-                    <img 
+                    <img
                       src={partner.logo}
                       alt={partner.name}
                       className="w-24 h-24 object-cover rounded-full bg-gray-100 p-2 mx-auto mb-4"
@@ -394,7 +400,7 @@ export default function Legal() {
                   </div>
                 ))}
               </div>
-              
+
               <div className="mt-8 p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-green-800 text-sm">
                   <strong>Our Guarantee:</strong> At Estox One, we eliminate investment risks through robust legal frameworks and expert vetting. Your financial growth and security are our top priority, ensuring a profitable and worry-free journey into real estate.
@@ -409,13 +415,6 @@ export default function Legal() {
           </Card>
         </div>
       </section>
-
-      <style jsx>{`
-        .text-gold-400 { color: #fbbf24; }
-        .text-gold-600 { color: #d97706; }
-        .bg-gold-600 { background-color: #d97706; }
-        .bg-gold-100 { background-color: #fef3c7; }
-      `}</style>
     </div>
   );
 }

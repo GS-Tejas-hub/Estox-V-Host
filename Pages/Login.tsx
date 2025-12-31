@@ -105,13 +105,6 @@ export default function Login() {
                             </Link>
                         </p>
                     </div>
-
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-sm text-gray-500 text-center">
-                            Admin credentials for testing:<br />
-                            <span className="font-mono text-xs">gudur.tejasgs@gmail.com / Demon@123</span>
-                        </p>
-                    </div>
                 </CardContent>
             </Card>
         </div>

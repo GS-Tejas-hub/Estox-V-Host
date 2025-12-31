@@ -43,7 +43,7 @@ export default function TermsOfUse() {
                             <div className="prose prose-lg max-w-none">
                                 {/* Header Info */}
                                 <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                                    <p className="text-sm text-gray-600 mb-2"><strong>Effective Date:</strong> [Insert Date]</p>
+                                    <p className="text-sm text-gray-600 mb-2"><strong>Effective Date:</strong> 17/12/2025</p>
                                     <p className="text-sm text-gray-600 mb-2"><strong>Website:</strong> www.estox.in / Estox One App</p>
                                 </div>
 

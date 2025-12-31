@@ -221,7 +221,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
                 <a href="https://www.instagram.com/estox_one?igsh=ZThjb3dkd2o2aDFs&utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="YouTube">
+                <a href="https://youtube.com/@estoxone?si=t1_QFUk32HE-D8HB" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="YouTube">
                   <Youtube className="w-5 h-5" />
                 </a>
                 <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
