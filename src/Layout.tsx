@@ -50,9 +50,16 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center" onClick={handleNavClick}>
-              <span className="text-2xl font-bold tracking-tight">
-                <span className="text-blue-900">ESTOX</span>
-                <span style={{ color: '#d97706' }}> ONE</span>
+              <span
+                className="text-2xl font-bold tracking-tight"
+                style={{
+                  background: 'linear-gradient(135deg, #1e40af, #3b82f6, #f59e0b)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                ESTOX ONE
               </span>
             </Link>
 
@@ -139,9 +146,16 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           >
             <div className="flex justify-between items-center mb-12">
               <Link to={createPageUrl("Home")} onClick={handleNavClick}>
-                <span className="text-2xl font-bold tracking-tight">
-                  <span className="text-blue-900">ESTOX</span>
-                  <span style={{ color: '#d97706' }}> ONE</span>
+                <span
+                  className="text-2xl font-bold tracking-tight"
+                  style={{
+                    background: 'linear-gradient(135deg, #1e40af, #3b82f6, #f59e0b)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  ESTOX ONE
                 </span>
               </Link>
               <Button onClick={() => setIsMobileMenuOpen(false)} variant="ghost" size="icon">
@@ -244,9 +258,16 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
             {/* Column 1: Company Info */}
             <div className="lg:col-span-1">
               <div className="flex items-center mb-4">
-                <span className="text-2xl font-bold tracking-tight">
-                  <span className="text-white">ESTOX</span>
-                  <span style={{ color: '#fbbf24' }}> ONE</span>
+                <span
+                  className="text-2xl font-bold tracking-tight"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff, #059669)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  ESTOX ONE
                 </span>
               </div>
               <p className="text-sm text-gray-400 mb-2 font-semibold">ESTOX ONE INDIA PRIVATE LIMITED</p>
