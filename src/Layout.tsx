@@ -49,8 +49,11 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to={createPageUrl("Home")} className="flex items-center space-x-2" onClick={handleNavClick}>
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/0e2693ff7_image15.png" alt="Estox One Logo" className="h-12" />
+            <Link to={createPageUrl("Home")} className="flex items-center" onClick={handleNavClick}>
+              <span className="text-2xl font-bold tracking-tight">
+                <span className="text-blue-900">ESTOX</span>
+                <span style={{ color: '#d97706' }}> ONE</span>
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -136,7 +139,10 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           >
             <div className="flex justify-between items-center mb-12">
               <Link to={createPageUrl("Home")} onClick={handleNavClick}>
-                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/0e2693ff7_image15.png" alt="Estox One Logo" className="h-10" />
+                <span className="text-2xl font-bold tracking-tight">
+                  <span className="text-blue-900">ESTOX</span>
+                  <span style={{ color: '#d97706' }}> ONE</span>
+                </span>
               </Link>
               <Button onClick={() => setIsMobileMenuOpen(false)} variant="ghost" size="icon">
                 <X className="w-6 h-6" />
@@ -237,8 +243,11 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Column 1: Company Info */}
             <div className="lg:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/bb08c4794_image13.png" alt="Estox One Logo" className="h-12" />
+              <div className="flex items-center mb-4">
+                <span className="text-2xl font-bold tracking-tight">
+                  <span className="text-white">ESTOX</span>
+                  <span style={{ color: '#fbbf24' }}> ONE</span>
+                </span>
               </div>
               <p className="text-sm text-gray-400 mb-2 font-semibold">ESTOX ONE INDIA PRIVATE LIMITED</p>
               <p className="text-xs text-gray-500 mb-4">CIN: U68100KA2025PTC212678</p>
