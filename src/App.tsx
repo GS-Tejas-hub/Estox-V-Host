@@ -8,6 +8,10 @@ import About from '../Pages/About';
 import Contact from '../Pages/Contact';
 import HowItWorks from '../Pages/HowItWorks';
 import Legal from '../Pages/Legal';
+import TermsOfUse from '../Pages/TermsOfUse';
+import PrivacyPolicy from '../Pages/PrivacyPolicy';
+import CookieNotice from '../Pages/CookieNotice';
+import KeyRisks from '../Pages/KeyRisks';
 import Login from '../Pages/Login';
 import SignUp from '../Pages/SignUp';
 import { createPageUrl } from './utils';
@@ -29,6 +33,10 @@ export default function App(): JSX.Element {
         <Route path={createPageUrl('Contact')} element={<Contact />} />
         <Route path={createPageUrl('HowItWorks')} element={<HowItWorks />} />
         <Route path={createPageUrl('Legal')} element={<Legal />} />
+        <Route path={createPageUrl('TermsOfUse')} element={<TermsOfUse />} />
+        <Route path={createPageUrl('PrivacyPolicy')} element={<PrivacyPolicy />} />
+        <Route path={createPageUrl('CookieNotice')} element={<CookieNotice />} />
+        <Route path={createPageUrl('KeyRisks')} element={<KeyRisks />} />
       </Route>
 
       {/* Fallback */}
