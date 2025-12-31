@@ -198,97 +198,177 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/bb08c4794_image13.png" alt="Estox One Logo" className="h-16" />
+        {/* Top Legal Links Bar */}
+        <div className="border-b border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-4 text-sm">
+                <span className="text-gray-400">© 2025 Estox One. All rights reserved.</span>
+                <span className="text-gray-600 hidden md:inline">|</span>
+                <Link to={createPageUrl('TermsOfUse')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">Terms of Use</Link>
+                <span className="text-gray-600 hidden md:inline">|</span>
+                <Link to={createPageUrl('KeyRisks')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">Key Risks</Link>
+                <span className="text-gray-600 hidden md:inline">|</span>
+                <Link to={createPageUrl('PrivacyPolicy')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
+                <span className="text-gray-600 hidden md:inline">|</span>
+                <Link to={createPageUrl('CookieNotice')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">Cookie Notice</Link>
               </div>
-              <p className="text-gray-400 mb-4 max-w-md">
-                Estox One Infra Private Limited facilitates real estate projects on a private placement basis. Each project is limited to a maximum of 200 investors in compliance with the Companies Act, 2013. Estox One Infra Private Limited is not a SEBI-registered investment advisor, broker, or stock exchange. Investments in real estate involve risks, and past performance does not guarantee future results.
-              </p>
+              {/* Social Icons */}
               <div className="flex space-x-4">
-                <a href="https://www.linkedin.com/company/estox-one/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/company/estox-one/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn">
                   <Linkedin className="w-5 h-5" />
                 </a>
-                <a href="https://www.instagram.com/estox_one?igsh=ZThjb3dkd2o2aDFs&utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="Instagram">
+                <a href="https://www.instagram.com/estox_one?igsh=ZThjb3dkd2o2aDFs&utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="YouTube">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="YouTube">
                   <Youtube className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-gold-400 transition-colors" aria-label="Twitter">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
                   <Twitter className="w-5 h-5" />
                 </a>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Quick Links */}
+        {/* Main Footer Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Column 1: Company Info */}
+            <div className="lg:col-span-1">
+              <div className="flex items-center space-x-2 mb-4">
+                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/bb08c4794_image13.png" alt="Estox One Logo" className="h-12" />
+              </div>
+              <p className="text-sm text-gray-400 mb-2 font-semibold">ESTOX ONE INDIA PRIVATE LIMITED</p>
+              <p className="text-xs text-gray-500 mb-4">CIN: U68100KA2025PTC212678</p>
+
+              {/* Compliance Badges */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex items-center gap-1 px-3 py-1.5 border border-gray-700 rounded-full text-xs text-gray-300">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  RERA Compliant
+                </div>
+                <div className="flex items-center gap-1 px-3 py-1.5 border border-gray-700 rounded-full text-xs text-gray-300">
+                  <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  SPV Secured
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: Platform Links */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                {navigation.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      to={item.href}
-                      onClick={handleNavClick}
-                      className="text-gray-400 hover:text-gold-400 transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Platform</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link to={createPageUrl('Projects')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('HowItWorks')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    How It Works
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('Portfolio')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Portfolio
+                  </Link>
+                </li>
               </ul>
             </div>
 
-            {/* Contact */}
+            {/* Column 3: Company Links */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <Phone className="w-4 h-4" />
-                  <span>+91 81055 20382</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <Mail className="w-4 h-4" />
-                  <span>estoxone.infra@gmail.com</span>
-                </div>
-              </div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Company</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link to={createPageUrl('About')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('Contact')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('Legal')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Legal & Compliance
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-              {/* Newsletter */}
-              <div className="mt-6">
-                <h4 className="font-medium mb-2">Stay Updated</h4>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
-                  />
-                  <Button className="bg-gold-600 hover:bg-gold-700 px-4 py-2 text-sm whitespace-nowrap">
-                    Subscribe
-                  </Button>
-                </div>
-              </div>
+            {/* Column 4: Legal Links */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Legal</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link to={createPageUrl('PrivacyPolicy')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('TermsOfUse')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Terms of Use
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('KeyRisks')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Risk Disclosure
+                  </Link>
+                </li>
+                <li>
+                  <Link to={createPageUrl('CookieNotice')} onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    Cookie Notice
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2025 Estox One. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="#" className="text-gray-400 hover:text-gold-400 text-sm">
-                Privacy Policy
-              </Link>
-              <Link to="#" className="text-gray-400 hover:text-gold-400 text-sm">
-                Terms of Service
-              </Link>
-              <Link to="#" className="text-gray-400 hover:text-gold-400 text-sm">
-                Disclaimer
-              </Link>
+          {/* Investment Disclaimer */}
+          <div className="border-t border-gray-800 mt-10 pt-8">
+            <h4 className="text-sm font-semibold text-gray-300 mb-4">Investment Disclaimer – Estox One (India)</h4>
+            <div className="text-xs text-gray-500 space-y-4">
+              <p>
+                All investments involve risk. Past performance is not a reliable indicator of future results or future performance. Returns, rental yields, appreciation projections and exit timelines shown on the platform are indicative only and not guaranteed.
+              </p>
+              <p>
+                ESTOX ONE INDIA PRIVATE LIMITED is an Indian private limited company operating a technology platform that enables fractional participation in real estate through SPV/LLP structures. Estox One is not a SEBI-registered investment advisor, portfolio manager, broker or NBFC, and does not provide investment or financial advice. Investors must conduct their own due diligence and review Key Risks before investing.
+              </p>
+              <p>
+                Investments made through Estox One are private, unlisted, and relatively illiquid in nature. Exit opportunities may depend on buyer interest, market conditions and company policies. Capital may be at risk, and investors may lose part or all of their investment.
+              </p>
+              <p>
+                By using the Estox One platform (website and mobile app), you agree to abide by the <Link to={createPageUrl('TermsOfUse')} onClick={handleNavClick} className="text-blue-400 hover:underline">Terms of Use</Link>, <Link to={createPageUrl('PrivacyPolicy')} onClick={handleNavClick} className="text-blue-400 hover:underline">Privacy Policy</Link> and <Link to={createPageUrl('CookieNotice')} onClick={handleNavClick} className="text-blue-400 hover:underline">Cookie Notice</Link>. Please read all documents carefully before investing.
+              </p>
+              <p>
+                Estox One may offer investment opportunities under Special Purpose Vehicle (SPV)/LLP structured real estate models, compliant with applicable Indian laws including Companies Act 2013, RERA regulations, FEMA (for NRI participation as applicable) and the Digital Personal Data Protection Act 2023.
+              </p>
+              <div className="mt-4 pt-4 border-t border-gray-800">
+                <p className="font-semibold text-gray-400">Registered Office:</p>
+                <p>No. 39, K No. 138/4, Airport Road, Segehalli, KR Puram, Bhattarahalli, Bangalore North, Bangalore – 560049, Karnataka, India</p>
+                <p className="mt-2">
+                  <span className="font-semibold text-gray-400">Email:</span> estoxone.infra@gmail.com | <span className="font-semibold text-gray-400">Website:</span> www.estox.in
+                </p>
+              </div>
+              <p className="mt-4 text-yellow-500/80 font-medium">
+                We strongly recommend reading the <Link to={createPageUrl('KeyRisks')} onClick={handleNavClick} className="text-yellow-400 hover:underline">Key Risks Document</Link> before making an investment decision.
+              </p>
             </div>
+          </div>
+
+          {/* Bottom Copyright */}
+          <div className="border-t border-gray-800 mt-8 pt-6 text-center">
+            <p className="text-xs text-gray-500">
+              © 2025 ESTOX ONE INDIA PRIVATE LIMITED. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
